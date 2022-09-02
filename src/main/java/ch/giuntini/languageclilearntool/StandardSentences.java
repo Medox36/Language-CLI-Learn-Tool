@@ -1,7 +1,7 @@
 package ch.giuntini.languageclilearntool;
 
 public final class StandardSentences {
-    public final static String TEXT = "## [deutscher Satz.];[englischer Satz]\n" +
+    public final static String TEXT = "## [deutscher Satz.];[englischer Satz.]\n" +
             "## \n" +
             "Bei Andeo zu arbeiten ist eine grossartige Erfahrung!;Working at Andeo is a great experience!\n" +
             "Amerika ist ein schönes Land.;America is a beautiful country.\n" +
