@@ -7,8 +7,9 @@ public class WordUtil {
 
     private static WordUtil INSTANCE;
 
-    public void removeWords(Sentence sentence, int rmNWords, Difficulty difficulty) {
-        String workingString = sentence.getOriginalTranslation();
+    public void removeWords(Sentence sentence, int rmNWords, Difficulty difficulty, boolean isTranslation) {
+        String workingString = isTranslation ? sentence.getOriginalTranslation() : sentence.getOriginalSentence();
+
         int wordCount = countWords(workingString);
         if (rmNWords > wordCount) {
             throw new IllegalArgumentException("can't remove more words than are in the sentence, words in sentence:"
@@ -71,8 +72,13 @@ public class WordUtil {
             i++;
         }
 
-        sentence.setBlankedTranslation(arrayToSentence(splitWords));
-        sentence.setRemovedWords(removedWords);
+        if (isTranslation) {
+            sentence.setBlankedTranslation(arrayToSentence(splitWords));
+            sentence.setRemovedTranslationWords(removedWords);
+        } else {
+            sentence.setBlankedOriginal(arrayToSentence(splitWords));
+            sentence.setRemovedOriginalWords(removedWords);
+        }
     }
 
     public void blankWordsAtIndexesExactCharCount(String[] words, int[] indexes) {

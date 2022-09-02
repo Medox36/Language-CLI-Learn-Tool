@@ -3,8 +3,10 @@ package ch.giuntini.languageclilearntool;
 public class Sentence {
     private final String originalSentence;
     private final String originalTranslation;
+    private String blankedOriginal;
     private String blankedTranslation;
-    private String[] removedWords;
+    private String[] removedOriginalWords;
+    private String[] removedTranslationWords;
 
     public Sentence(String originalSentence, String originalTranslation) {
         this.originalSentence = originalSentence;
@@ -12,7 +14,8 @@ public class Sentence {
     }
 
     public void prepare(int rmNWords, Difficulty difficulty) {
-        WordUtil.getInstance().removeWords(this, rmNWords, difficulty);
+        WordUtil.getInstance().removeWords(this, rmNWords, difficulty, true);
+        WordUtil.getInstance().removeWords(this, rmNWords, difficulty, false);
     }
 
     public String getOriginalSentence() {
@@ -23,6 +26,14 @@ public class Sentence {
         return originalTranslation;
     }
 
+    public String getBlankedOriginal() {
+        return blankedOriginal;
+    }
+
+    public void setBlankedOriginal(String blankedOriginal) {
+        this.blankedOriginal = blankedOriginal;
+    }
+
     public String getBlankedTranslation() {
         return blankedTranslation;
     }
@@ -31,11 +42,19 @@ public class Sentence {
         this.blankedTranslation = blankedTranslation;
     }
 
-    public String[] getRemovedWords() {
-        return removedWords;
+    public String[] getRemovedOriginalWords() {
+        return removedOriginalWords;
     }
 
-    public void setRemovedWords(String[] removedWords) {
-        this.removedWords = removedWords;
+    public void setRemovedOriginalWords(String[] removedOriginalWords) {
+        this.removedOriginalWords = removedOriginalWords;
+    }
+
+    public String[] getRemovedTranslationWords() {
+        return removedTranslationWords;
+    }
+
+    public void setRemovedTranslationWords(String[] removedTranslationWords) {
+        this.removedTranslationWords = removedTranslationWords;
     }
 }
