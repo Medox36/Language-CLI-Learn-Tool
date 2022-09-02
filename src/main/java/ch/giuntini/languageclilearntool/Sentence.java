@@ -6,9 +6,9 @@ public class Sentence {
     private String blankedTranslation;
     private String[] removedWords;
 
-    public Sentence(String originalSentence, String translation) {
+    public Sentence(String originalSentence, String originalTranslation) {
         this.originalSentence = originalSentence;
-        originalTranslation = translation;
+        this.originalTranslation = originalTranslation;
     }
 
     public void prepare(int rmNWords, Difficulty difficulty) {
