@@ -7,15 +7,16 @@ public class WordUtil {
 
     private static WordUtil INSTANCE;
 
-    public String[] removeWords(String sentence, int rmNWords, Difficulty difficulty) {
-        int wordCount = countWords(sentence);
+    public void removeWords(Sentence sentence, int rmNWords, Difficulty difficulty) {
+        String workingString = sentence.getOriginalTranslation();
+        int wordCount = countWords(workingString);
         if (rmNWords > wordCount) {
             throw new IllegalArgumentException("can't remove more words than are in the sentence, words in sentence:"
                     + wordCount);
         }
-        String[] splitWords = splitWords(sentence);
+        String[] splitWords = splitWords(workingString);
         String[] original = splitWords.clone();
-        double[] weight = weightWords(sentence);
+        double[] weight = weightWords(workingString);
         int[] rmIndex = new int[rmNWords];
 
         switch (difficulty) {
@@ -61,17 +62,17 @@ public class WordUtil {
             }
         }
 
-        String[] result = new String[rmNWords + 1];
-        result[0] = arrayToSentence(splitWords);
+        String[] removedWords = new String[rmNWords];
         rmIndex = Arrays.stream(rmIndex).sorted().toArray();
 
-        int i = 1;
+        int i = 0;
         for (int index : rmIndex) {
-            result[i] = original[index];
+            removedWords[i] = original[index];
             i++;
         }
 
-        return result;
+        sentence.setBlankedTranslation(arrayToSentence(splitWords));
+        sentence.setRemovedWords(removedWords);
     }
 
     public void blankWordsAtIndexesExactCharCount(String[] words, int[] indexes) {

@@ -12,10 +12,7 @@ public class Sentence {
     }
 
     public void prepare(int rmNWords, Difficulty difficulty) {
-        String[] temp = WordUtil.getInstance().removeWords(originalTranslation, rmNWords, difficulty);
-        blankedTranslation = temp[0];
-        removedWords = new String[temp.length - 1];
-        System.arraycopy(temp, 1, removedWords, 0, temp.length - 1);
+        WordUtil.getInstance().removeWords(this, rmNWords, difficulty);
     }
 
     public String getOriginalSentence() {
@@ -30,7 +27,15 @@ public class Sentence {
         return blankedTranslation;
     }
 
+    public void setBlankedTranslation(String blankedTranslation) {
+        this.blankedTranslation = blankedTranslation;
+    }
+
     public String[] getRemovedWords() {
         return removedWords;
+    }
+
+    public void setRemovedWords(String[] removedWords) {
+        this.removedWords = removedWords;
     }
 }
