@@ -5,28 +5,73 @@ import java.util.Collections;
 
 public class WordUtil {
 
-    public String removeWords(String sentence, int rmNWords) {
+    private static WordUtil INSTANCE;
+
+    public String[] removeWords(String sentence, int rmNWords, Difficulty difficulty) {
         int wordCount = countWords(sentence);
         if (rmNWords > wordCount) {
             throw new IllegalArgumentException("can't remove more words than are in the sentence, words in sentence:"
                     + wordCount);
         }
         String[] splitWords = splitWords(sentence);
+        String[] original = splitWords.clone();
         double[] weight = weightWords(sentence);
-        int[] complexOrder = sortWeightDescAndCompare(weight);
         int[] rmIndex = new int[rmNWords];
 
-        for (int i = 0; i < rmNWords; i++) {
-            if (rmNWords < wordCount && Math.random() > 0.68) {
-                rmIndex[i] = complexOrder[i + 1];
-            } else {
-                rmIndex[i] = complexOrder[i];
+        switch (difficulty) {
+            case EASY: {
+                int[] complexOrder = sortWeightAscAndCompare(weight);
+                for (int i = 0; i < rmNWords; i++) {
+                    if (rmNWords < wordCount && Math.random() > 0.68 && i+1 < wordCount) {
+                        rmIndex[i] = complexOrder[i + 1];
+                    } else {
+                        rmIndex[i] = complexOrder[i];
+                    }
+                }
+                blankWordsAtIndexesExactCharCount(splitWords, rmIndex);
+                break;
+            }
+            case NORMAL: {
+                int[] complexOrder = sortWeightAscAndCompare(weight);
+                for (int i = 0; i < rmNWords; i++) {
+                    if (rmNWords < wordCount && Math.random() > 0.34&& i+1 < wordCount) {
+                        rmIndex[i] = complexOrder[i + 1];
+                    } else {
+                        rmIndex[i] = complexOrder[i];
+                    }
+                }
+                blankWordsAtIndexesExactCharCount(splitWords, rmIndex);
+                break;
+            }
+            case HARD: {
+                int[] complexOrder = sortWeightDescAndCompare(weight);
+                for (int i = 0; i < rmNWords; i++) {
+                    if (rmNWords < wordCount && Math.random() > 0.76 && i+1 < wordCount) {
+                        rmIndex[i] = complexOrder[i + 1];
+                    } else {
+                        rmIndex[i] = complexOrder[i];
+                    }
+                }
+                blankWordsAtIndexes(splitWords, rmIndex);
+                break;
+            }
+            case EXTREME: {
+                blankAllWords(splitWords);
+                break;
             }
         }
 
-        blankWordsAtIndexes(splitWords, rmIndex);
+        String[] result = new String[rmNWords + 1];
+        result[0] = arrayToSentence(splitWords);
+        rmIndex = Arrays.stream(rmIndex).sorted().toArray();
 
-        return arrayToSentence(splitWords);
+        int i = 1;
+        for (int index : rmIndex) {
+            result[i] = original[index];
+            i++;
+        }
+
+        return result;
     }
 
     public void blankWordsAtIndexesExactCharCount(String[] words, int[] indexes) {
@@ -42,10 +87,32 @@ public class WordUtil {
         }
     }
 
+    private void blankAllWords(String[] words) {
+        Arrays.fill(words, "_".repeat(8));
+    }
+
+    private void blankAllWordsExactCharCount(String[] words) {
+        for (int i = 0; i < words.length; i++) {
+            int tempLength = words[i].length();
+            words[i] = "_".repeat(tempLength);
+        }
+    }
+
     private int[] sortWeightDescAndCompare(double[] originalWeight) {
         double[] temp = originalWeight.clone();
         temp = Arrays.stream(temp).boxed().sorted(Collections.reverseOrder()).mapToDouble(Double::doubleValue).toArray();
 
+        return sortIndexes(originalWeight, temp);
+    }
+
+    private int[] sortWeightAscAndCompare(double[] originalWeight) {
+        double[] temp = originalWeight.clone();
+        temp = Arrays.stream(temp).boxed().sorted().mapToDouble(Double::doubleValue).toArray();
+
+        return sortIndexes(originalWeight, temp);
+    }
+
+    private int[] sortIndexes(double[] originalWeight, double[] temp) {
         int[] oldIndexes = new int[originalWeight.length];
         for (int i = 0; i < temp.length; i++) {
             for (int j = 0; j < originalWeight.length; j++) {
@@ -56,12 +123,6 @@ public class WordUtil {
         }
 
         return oldIndexes;
-    }
-
-    private double getLowestValue(double[] arr) {
-        double[] temp = arr.clone();
-        Arrays.sort(temp);
-        return temp[0];
     }
 
     private int countWords(String sentence) {
@@ -81,6 +142,11 @@ public class WordUtil {
             weight[i] = (words[i].length() * 2) / 27d;
             if (Character.isUpperCase(words[i].charAt(0))) {
                 weight[i] += 0.002;
+                if (words[i].endsWith("s")) {
+                    weight[i] += 0.004;
+                }
+            } else {
+                weight[i] += 0.003;
             }
             if (words[i].contains("'")) {
                 weight[i] += 0.006;
@@ -104,4 +170,10 @@ public class WordUtil {
         return sb.toString();
     }
 
+    public static WordUtil getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new WordUtil();
+        }
+        return INSTANCE;
+    }
 }
