@@ -1,11 +1,14 @@
 package ch.giuntini.languageclilearntool;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class WordUtil {
 
     private static WordUtil INSTANCE;
+    private final ArrayList<Character> terminations = new ArrayList<>(List.of('.', '!', '?'));
 
     public void removeWords(Sentence sentence, int rmNWords, Difficulty difficulty, boolean isTranslation) {
         String workingString = isTranslation ? sentence.getOriginalTranslation() : sentence.getOriginalSentence();
@@ -24,7 +27,7 @@ public class WordUtil {
             case EASY: {
                 int[] complexOrder = sortWeightAscAndCompare(weight);
                 for (int i = 0; i < rmNWords; i++) {
-                    if (rmNWords < wordCount && Math.random() > 0.68 && i+1 < wordCount) {
+                    if (rmNWords < wordCount && Math.random() > 0.68 && i + 1 < wordCount) {
                         rmIndex[i] = complexOrder[i + 1];
                     } else {
                         rmIndex[i] = complexOrder[i];
@@ -36,7 +39,7 @@ public class WordUtil {
             case NORMAL: {
                 int[] complexOrder = sortWeightAscAndCompare(weight);
                 for (int i = 0; i < rmNWords; i++) {
-                    if (rmNWords < wordCount && Math.random() > 0.34&& i+1 < wordCount) {
+                    if (rmNWords < wordCount && Math.random() > 0.41 && i + 1 < wordCount) {
                         rmIndex[i] = complexOrder[i + 1];
                     } else {
                         rmIndex[i] = complexOrder[i];
@@ -48,7 +51,7 @@ public class WordUtil {
             case HARD: {
                 int[] complexOrder = sortWeightDescAndCompare(weight);
                 for (int i = 0; i < rmNWords; i++) {
-                    if (rmNWords < wordCount && Math.random() > 0.76 && i+1 < wordCount) {
+                    if (rmNWords < wordCount && Math.random() > 0.76 && i + 1 < wordCount) {
                         rmIndex[i] = complexOrder[i + 1];
                     } else {
                         rmIndex[i] = complexOrder[i];
@@ -84,24 +87,30 @@ public class WordUtil {
     public void blankWordsAtIndexesExactCharCount(String[] words, int[] indexes) {
         for (int index : indexes) {
             int tempLength = words[index].length();
-            words[index] = "_".repeat(tempLength);
+            Character lastChar = words[index].charAt(words[index].length() - 1);
+            words[index] = terminations.contains(lastChar) ? "_".repeat(tempLength) + lastChar : "_".repeat(tempLength);
         }
     }
 
     private void blankWordsAtIndexes(String[] words, int[] indexes) {
         for (int index : indexes) {
-            words[index] = "_".repeat(8);
+            Character lastChar = words[index].charAt(words[index].length() - 1);
+            words[index] = terminations.contains(lastChar) ? "_".repeat(8) + lastChar : "_".repeat(8);
         }
     }
 
     private void blankAllWords(String[] words) {
-        Arrays.fill(words, "_".repeat(8));
+        for (int i = 0; i < words.length; i++) {
+            Character lastChar = words[i].charAt(words[i].length() - 1);
+            words[i] = terminations.contains(lastChar) ? "_".repeat(8) + lastChar : "_".repeat(8);
+        }
     }
 
     private void blankAllWordsExactCharCount(String[] words) {
         for (int i = 0; i < words.length; i++) {
             int tempLength = words[i].length();
-            words[i] = "_".repeat(tempLength);
+            Character lastChar = words[i].charAt(words[i].length() - 1);
+            words[i] = terminations.contains(lastChar) ? "_".repeat(tempLength) + lastChar : "_".repeat(tempLength);
         }
     }
 
