@@ -1,9 +1,10 @@
 package ch.giuntini.languageclilearntool;
 
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.AnsiPrintStream;
 
-public class CLIWriter implements AutoCloseable {
+public class CLIWriter {
     private final AnsiPrintStream ansiPrintStream;
 
     public CLIWriter() {
@@ -11,11 +12,15 @@ public class CLIWriter implements AutoCloseable {
     }
 
     public void writeAnsi(String str) {
-        ansiPrintStream.println(str);
+        ansiPrintStream.println(Ansi.ansi().a(str).toString());
     }
 
-    @Override
-    public void close() {
-        ansiPrintStream.close();
+    public void changeCurrFgColor(Ansi.Color color) {
+        ansiPrintStream.print(Ansi.ansi().fg(color).toString());
     }
+
+    public void changeCurrBgColor(Ansi.Color color) {
+        ansiPrintStream.print(Ansi.ansi().bg(color).toString());
+    }
+
 }
