@@ -34,9 +34,8 @@ public class LanguageCLILearnTool {
                 "███████╗██║  ██║██║ ╚████║╚██████╔╝╚██████╔╝██║  ██║╚██████╔╝███████╗   ╚██████╗███████╗██║   ███████╗███████╗██║  ██║██║  ██║██║ ╚████║         ██║   ╚██████╔╝╚██████╔╝███████╗\n" +
                 "╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝    ╚═════╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝         ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝\n" +
                 "\n";
-        String character = Ansi.ansi().fg(Ansi.Color.CYAN).toString();
-        String shadow = Ansi.ansi().fg(Ansi.Color.YELLOW).toString();
-
+        String character = Ansi.ansi().fgBright(Ansi.Color.CYAN).toString();
+        String shadow = Ansi.ansi().fgBright(Ansi.Color.YELLOW).toString();
         StringBuilder sb = new StringBuilder();
         char oldTemp;
 
