@@ -1,15 +1,21 @@
 package ch.giuntini.languageclilearntool;
 
-import org.fusesource.jansi.Ansi;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 public class Menu {
 
     private final CLIReader reader;
     private final CLIWriter writer;
+    private final LearnUtil learnUtil;
+    private Difficulty difficulty;
 
     public Menu(CLIReader reader, CLIWriter writer) {
         this.reader = reader;
         this.writer = writer;
+        learnUtil = new LearnUtil();
+        difficulty = Difficulty.NORMAL;
     }
 
     public void mainMenu() {
@@ -32,7 +38,7 @@ public class Menu {
                     break;
                 }
                 case 3: {
-                    infoMenu();
+                    info();
                     break;
                 }
                 case 4: {
@@ -44,31 +50,30 @@ public class Menu {
         } while (opt != 0);
     }
 
-    public void close() {
-        writer.writeAnsi(Ansi.ansi().fgBrightBlue().toString());
-        writer.writeAnsi("\nProgram is now closing.\nGoodbye!");
+    private void close() {
+        writer.writeAnsi(CLIWriter.lB + "\nProgram is now closing.\nGoodbye!");
     }
 
-    public void learnMenu() {
-        final int[] options = new int[]{0, 1, 2};
+    private void learnMenu() {
+        final int[] options = new int[]{0, 1, 2, 3};
         int opt;
-
-        writer.writeAnsi(Ansi.ansi().fgMagenta().a("\nYou're now in the learning mode").fgDefault().toString());
-
         do {
             printLearnMenuOptions();
             opt = reader.readIntOption(options);
             switch (opt) {
                 case 0: {
-
                     break;
                 }
                 case 1: {
-
+                    new LearnEnglish(learnUtil).startLearning();
                     break;
                 }
                 case 2: {
-
+                    new LearnGerman(learnUtil).startLearning();
+                    break;
+                }
+                case 3: {
+                    changeDifficulty();
                     break;
                 }
                 default: {}
@@ -77,34 +82,104 @@ public class Menu {
         } while (opt != 0);
     }
 
-    public void addMenu() {
+    private void changeDifficulty() {
+        String g = CLIWriter.lG;
+        String y = CLIWriter.y;
+        String r = CLIWriter.lR;
+        String m = CLIWriter.lM;
+        String w = CLIWriter.w;
+
+        writer.writeAnsi(w + "Choose difficulty:");
+        writer.writeAnsi(g + "Easy" + w + ": 0 | " + y + "Normal" + w + ": 1 | " + r + "Hard" + w + ": 2 | " + m + "Extreme" + w + ": 3");
+
+        difficulty = Difficulty.values()[reader.readIntOption(0, 1, 2, 3)];
+    }
+
+    private void addMenu() {
+        final int[] options = new int[]{0, 1, 2};
+        int opt;
+        do {
+            printAddMeuOptions();
+            opt = reader.readIntOption(options);
+            switch (opt) {
+                case 0: {
+                    break;
+                }
+                case 1: {
+                    learnUtil.reReadFile();
+                    break;
+                }
+                case 2: {
+                    try {
+                        Desktop.getDesktop().open(new File("translations.txt"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                }
+                default: {}
+            }
+
+        } while (opt != 0);
+    }
+
+    private void info() {
 
     }
 
-    public void infoMenu() {
+    private void credits() {
 
     }
 
-    public void credits() {
+    private void printMainMenuOptions() {
+        String lG = CLIWriter.lG;
+        String w = CLIWriter.w;
 
-    }
-
-    public void printMainMenuOptions() {
-        String lG = Ansi.ansi().fgBright(Ansi.Color.GREEN).toString();
-        String w = Ansi.ansi().fg(Ansi.Color.WHITE).toString();
-
-        writer.writeAnsi(Ansi.ansi().fgYellow().a("\nMain Menu").toString());
+        writer.writeAnsi(CLIWriter.y + "\nMain Menu");
         writer.writeAnsi(w + "Please choose from the following options by entering a number:");
         writer.writeAnsi(w + "Exit: " + lG + "0" + w + " | Learn-mode: " + lG + "1" + w + " | Add Translations: "
                 + lG + "2" + w + " | Show general Information: " + lG + "3" + w + " | Show credits: " + lG + "4");
     }
 
-    public void printLearnMenuOptions() {
-        String lG = Ansi.ansi().fgBright(Ansi.Color.GREEN).toString();
-        String w = Ansi.ansi().fg(Ansi.Color.WHITE).toString();
+    private void printLearnMenuOptions() {
+        String lG = CLIWriter.lG;
+        String w = CLIWriter.w;
+        String y;
 
+        switch (difficulty) {
+            case EASY: {
+                y = CLIWriter.lG;
+                break;
+            }
+            case NORMAL: {
+                y = CLIWriter.y;
+                break;
+            }
+            case HARD: {
+                y = CLIWriter.lR;
+                break;
+            }
+            case EXTREME: {
+                y = CLIWriter.lM;
+                break;
+            }
+            default: y = CLIWriter.w;
+        }
+
+        writer.writeAnsi( CLIWriter.m + "\nLearn Menu");
         writer.writeAnsi(w + "Please choose from the following options by entering a number:");
-        writer.writeAnsi(w + "Exit: " + lG + "0" + w + " | Start learning english: " + lG + "1" + w
-                + " | Start learning German: " + lG + "2" + w);
+        writer.writeAnsi(w + "Back to main menu: " + lG + "0" + w + " | Start learning english: " + lG + "1" + w
+                + " | Start learning German: " + lG + "2" + w + " | Change Difficulty: " + lG + "3" + w
+                + " current: " + y + difficulty.name() + w);
+    }
+
+    private void printAddMeuOptions() {
+        String lG = CLIWriter.lG;
+        String w = CLIWriter.w;
+
+        writer.writeAnsi(CLIWriter.lM + "\nAdd Translations Menu");
+        writer.writeAnsi(w + "Please choose from the following options by entering a number:");
+        writer.writeAnsi(w + "Back to learn menu: " + lG + "0" + w + " | Reload the file: " + lG + "1" + w
+                + " | Open the file: " + lG + "2" + w);
     }
 }

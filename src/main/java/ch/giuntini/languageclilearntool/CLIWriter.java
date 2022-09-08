@@ -4,6 +4,21 @@ import org.fusesource.jansi.Ansi;
 
 public class CLIWriter {
 
+    public static final String w = Ansi.ansi().fg(Ansi.Color.WHITE).toString();
+    public static final String lG = Ansi.ansi().fgBright(Ansi.Color.GREEN).toString();
+    public static final String g = Ansi.ansi().fg(Ansi.Color.GREEN).toString();
+    public static final String lY = Ansi.ansi().fgBright(Ansi.Color.YELLOW).toString();
+    public static final String y = Ansi.ansi().fg(Ansi.Color.YELLOW).toString();
+    public static final String lR = Ansi.ansi().fgBright(Ansi.Color.RED).toString();
+    public static final String r = Ansi.ansi().fg(Ansi.Color.RED).toString();
+    public static final String lC = Ansi.ansi().fgBright(Ansi.Color.CYAN).toString();
+    public static final String c = Ansi.ansi().fg(Ansi.Color.CYAN).toString();
+    public static final String lM = Ansi.ansi().fgBright(Ansi.Color.MAGENTA).toString();
+    public static final String m = Ansi.ansi().fg(Ansi.Color.MAGENTA).toString();
+    public static final String lB = Ansi.ansi().fgBright(Ansi.Color.BLUE).toString();
+    public static final String b = Ansi.ansi().fg(Ansi.Color.BLUE).toString();
+
+
     public CLIWriter() {
     }
 
