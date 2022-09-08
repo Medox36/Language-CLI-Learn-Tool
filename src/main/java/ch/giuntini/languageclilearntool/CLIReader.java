@@ -1,5 +1,7 @@
 package ch.giuntini.languageclilearntool;
 
+import org.fusesource.jansi.Ansi;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -21,17 +23,23 @@ public class CLIReader implements AutoCloseable {
             chosenOption = readInt(text);
             int finalChosenOption = chosenOption;
             inArray = Arrays.stream(options).anyMatch(value -> value == finalChosenOption);
+            if (!inArray) {
+                System.out.println(Ansi.ansi().fgRed().a("Choose an option form the list above!").fgDefault().toString());
+            }
         } while (!inArray);
 
         return chosenOption;
     }
 
+    public int readIntOption(int... options) {
+        return readIntOption("Not a valid Option!", options);
+    }
+
     public int readInt(String text) {
-        System.out.println(text);
-        System.out.print("  >");
+        System.out.print(Ansi.ansi().fgDefault().a("  >").toString());
         while (!scanner.hasNextInt()) {
-            System.out.println(text);
-            System.out.print("  >");
+            System.out.println(Ansi.ansi().fgRed().a(text).fgDefault().toString());
+            System.out.print(Ansi.ansi().fgDefault().a("  >").toString());
             scanner.next();
         }
         int chosenOption = scanner.nextInt();
