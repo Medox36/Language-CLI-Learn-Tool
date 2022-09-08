@@ -6,7 +6,7 @@ import org.fusesource.jansi.AnsiConsole;
 public class LanguageCLILearnTool {
 
     private final CLIWriter writer;
-    private CLIReader reader;
+    private final CLIReader reader;
 
     public LanguageCLILearnTool() {
         if (System.console() != null) {
@@ -16,6 +16,10 @@ public class LanguageCLILearnTool {
         writer = new CLIWriter();
         reader = new CLIReader();
         printStartSequence();
+    }
+
+    public void start() {
+        new Menu(reader, writer).mainMenu();
     }
 
     private void printStartSequence() {
