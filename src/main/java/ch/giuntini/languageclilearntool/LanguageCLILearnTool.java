@@ -1,6 +1,5 @@
 package ch.giuntini.languageclilearntool;
 
-import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 public class LanguageCLILearnTool {
@@ -77,20 +76,21 @@ public class LanguageCLILearnTool {
     }
 
     private boolean changedToFullBlock(char last, char current) {
-        return (last == '╔' || last == '═' || last == '╗' || last == '║' || last == '╝' || last == '╚' || last == ' ' || last == '\n') && current == '█';
+        return (last == '╔' || last == '═' || last == '╗' || last == '║' || last == '╝' || last == '╚' || last == ' ' || last == '\n')
+                && current == '█';
     }
 
     private void printWelcome() {
         String welcome = "\n" +
                 "╦ ╦┌─┐┬  ┌─┐┌─┐┌┬┐┌─┐   ┬ ┬┌─┐┬  ┬┌─┐  ┌─┐┬ ┬┌┐┌  ┬  ┌─┐┌─┐┬─┐┌┐┌┬┌┐┌┌─┐┬\n" +
                 "║║║├┤ │  │  │ ││││├┤    ├─┤├─┤└┐┌┘├┤   ├┤ │ ││││  │  ├┤ ├─┤├┬┘││││││││ ┬│\n" +
-                "╚╩╝└─┘┴─┘└─┘└─┘┴ ┴└─┘┘  ┴ ┴┴ ┴ └┘ └─┘  └  └─┘┘└┘  ┴─┘└─┘┴ ┴┴└─┘└┘┴┘└┘└─┘o\n";
+                "╚╩╝└─┘┴─┘└─┘└─┘┴ ┴└─┘   ┴ ┴┴ ┴ └┘ └─┘  └  └─┘┘└┘  ┴─┘└─┘┴ ┴┴└─┘└┘┴┘└┘└─┘o\n";
 
         writer.writeAnsi(CLIWriter.lM + welcome);
     }
 
     private void printGeneralInfo() {
-        writer.writeAnsi(Ansi.ansi().fgBrightCyan().a("Version: 1.0.0alph").toString());
+        writer.writeAnsi(CLIWriter.lC + "Version: 1.0.0-alpha");
     }
 
     public void reset() {
