@@ -27,7 +27,7 @@ public class TranslationFileReader {
         List<Sentence> sentences = new ArrayList<>();
         for (String str : stringList) {
             // ignore comments
-            if (str.startsWith("##")) {
+            if (str.startsWith("##") || str.isBlank()) {
                 continue;
             }
             String[] temp = str.split(";");
